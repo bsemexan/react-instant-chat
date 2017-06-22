@@ -7,8 +7,47 @@ import ChatApp from './ChatApp';
 // This is the first screen seen by the user. We should display some way for
 // them to enter their name and enter the chat room
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    // set the initial state of the application
+    this.state = { username: '' };
+
+    // bind the 'this' keyword to the event handlers
+    this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
+    this.usernameSubmitHandler = this.usernameSubmitHandler.bind(this);
+  }
+
+  usernameChangeHandler(event) {
+    this.setState({ username: event.target.value });
+  }
+
+  usernameSubmitHandler(event) {
+    event.preventDefault();
+    this.setState({ submitted: true, username: this.state.username });
+  }
+
+
   render() {
-    // Display a simple login screen with a username field and a submit button
+    if (this.state.submitted) {
+      // Form was submitted, now show the main App
+      return (
+        <ChatApp username={this.state.username}/>
+      );
+    }
+
+    return (
+      <form onSubmit={this.usernameSubmitHandler} className="username-container">
+        <h1>React Instant Chat</h1>
+        <div>
+          <input
+            type="text"
+            onchange={this.usernameChangeHandler}
+            placeholder="Enter a username"
+            required />
+        </div>
+        <input type="submit" value="Submit" />
+      </form>
+    );
   }
 
 }
